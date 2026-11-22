@@ -65,7 +65,7 @@ try{
  firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();
  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.warn);
  $('login').disabled=false;
- $('login').onclick=async()=>{try{const provider=new firebase.auth.GoogleAuthProvider();await auth.signInWithRedirect(provider)}catch(e){alert('No se pudo iniciar sesión: '+e.message)}};
+ $('login').onclick=async()=>{try{const provider=new firebase.auth.GoogleAuthProvider();await auth.signInWithPopup(provider)}catch(e){alert('No se pudo iniciar sesión: '+e.message)}};
  $('logout').onclick=async()=>{if(!confirm('¿Cerrar sesión? Los lugares de este dispositivo permanecerán guardados.'))return;await auth.signOut()};
  auth.getRedirectResult().catch(e=>{console.error(e);syncMessage('Error de acceso con Google: '+e.message)});
  auth.onAuthStateChanged(async current=>{user=current;$('login').disabled=!!user;$('logout').disabled=!user;$('sync').disabled=!user;$('authStatus').textContent=user?'Sesión: '+(user.email||'Google'):'Sin sesión. Puedes marcar puntos localmente.';if(user)await syncCloud();else syncMessage('Sin sesión: lugares guardados en este dispositivo.')});
